@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import re
+import glob
+
 
 from prime_numbers import return_list_of_primes, load_primes, save_primes, is_prime 
 
@@ -135,4 +138,12 @@ def save_best(cities,min_path,min_length):
     SAVE_PATH = 'results/path_' + str(min_length.astype(int)) + '.csv'
     frame.to_csv(SAVE_PATH,index=False) #no index!
     print("saved as " + str(SAVE_PATH))
-    
+
+def load_best():
+    filelist = glob.glob("results/*.csv")
+    lengths = [ re.search('path_(.*).csv',file)[1] for file in filelist ] 
+    min_length = np.min(np.array(lengths).astype(np.int))
+    PATH_MIN = 'results\\path_' + str(min_length) + '.csv'
+    frame = np.array ( pd.read_csv(PATH_MIN)[1:-1] )
+    frame = frame.reshape(len(frame))
+    return frame , min_length
